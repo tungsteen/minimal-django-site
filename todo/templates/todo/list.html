@@ -1,0 +1,28 @@
+<div class="container">
+ <div class="starter-template"> 
+  <h1>ToDo List:</h1> 
+   <table class="table table-hover todo-table">
+    <thead> 
+     <tr>
+      <th class="text-center">Done</th><th class="text-center">Action</th><th></th> 
+     </tr> 
+    </thead>
+    <tbody id="insert-here">
+     {% for todo in todo_list %}
+        <tr class="todo-row" entryId="{{ todo.id }}">
+        <!-- autocomplete=off turns off cache of checkbox state -->
+        <td class="col-md-1"><input autocomplete="off" class="done-checkbox" type="checkbox" {% if todo.done %} checked {% endif %}></td>
+        <td class="todo-text" style="text-decoration: {% if todo.done  %} line-through {% else %} none {% endif %};"> {{ todo.text }}</td>
+        <td class="col-md-1"><span class="glyphicon glyphicon-remove delete-button"></span></td>
+        </tr>
+     {% endfor %}
+    </tbody>
+   </table>
+   <form action="/" id="add-form" class="input-group">
+    <input type="text" class="form-control" id="textToSubmit" placeholder="Type action here...">
+    <span class="input-group-btn">
+     <input class="btn btn-default" type="submit" id="addButton" value="Add">
+    </span>
+   </form>
+ </div>
+</div>

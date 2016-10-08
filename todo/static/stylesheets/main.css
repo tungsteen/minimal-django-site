@@ -1,0 +1,21 @@
+body {
+    padding-top: 50px;
+}
+.starter-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+.background-red {
+    background-color: red;
+}
+
+.background-red {
+    background-color: white;
+}
+
+.delete-button {
+    visibility: hidden; 
+    color: gray;
+    cursor: default;
+}
