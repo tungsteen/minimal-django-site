@@ -17,3 +17,9 @@ def add_todo(request):
     q = Todo(text=postText, done=isDone)
     q.save()
     return JsonResponse(model_to_dict(q))
+
+def done(request, id):
+    todo_entry = Todo.objects.get(id=id)
+    todo_entry.done = not todo_entry.done
+    todo_entry.save()
+    return JsonResponse({'isDone': todo_entry.done})

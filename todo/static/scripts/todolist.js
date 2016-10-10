@@ -55,11 +55,21 @@ define(["jquery"], function($) {
 
     function doneTodoEntry(todoRow) {
         var entryId = todoRow.attr("entryId");
+        
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
         var doneTodoUrl = "/todo/done/" + entryId;
         $.ajax({ 
-            url: doneTodoUrl.url,
+            url: doneTodoUrl,
             type: "PUT"
-        }).done(function(isDone) {
+        }).done(function(data) {
+            var isDone = data.isDone;
             todoRow.find("input[type='checkbox']").prop("checked", isDone);
             todoRow.find("td.todo-text").css("text-decoration", isDone ? "line-through" : "none");
             todoRow.find("span.delete-button").css("visibility", isDone ? "visible" : "hidden");
