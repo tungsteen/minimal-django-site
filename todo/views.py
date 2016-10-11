@@ -23,3 +23,8 @@ def done(request, id):
     todo_entry.done = not todo_entry.done
     todo_entry.save()
     return JsonResponse({'isDone': todo_entry.done})
+
+def delete_todo(request, id):
+    todo_entry = Todo.objects.get(id=id)
+    todo_entry.delete()
+    return HttpResponse('ok')

@@ -10,12 +10,12 @@ define(["jquery"], function($) {
 
     function getCookie(name) {
         var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
+        if (document.cookie && document.cookie !== "") {
+            var cookies = document.cookie.split(";");
             for (var i = 0; i < cookies.length; i++) {
                 var cookie = jQuery.trim(cookies[i]);
                 // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                if (cookie.substring(0, name.length + 1) === (name + "=")) {
                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                     break;
                 }
@@ -24,7 +24,18 @@ define(["jquery"], function($) {
         return cookieValue;
     }
 
-    var csrftoken = getCookie('csrftoken');
+    var csrftoken = getCookie("csrftoken");
+
+    function addCsrfToken()
+    {
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+    }
 
 
     function addTodoEntry( submitForm ) {
@@ -33,15 +44,9 @@ define(["jquery"], function($) {
         // Send the data using post
         var addTodoUrl = "todo/";
 
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            }
-        });
-                
-        var posting = $.post( addTodoUrl, {'text': textForm, 'done': false});
+        addCsrfToken();
+               
+        var posting = $.post( addTodoUrl, {"text": textForm, "done": false});
  
         // Put the results in a div
         posting.done(function( data ) {
@@ -55,15 +60,9 @@ define(["jquery"], function($) {
 
     function doneTodoEntry(todoRow) {
         var entryId = todoRow.attr("entryId");
-        
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            }
-        });
 
+        addCsrfToken();
+        
         var doneTodoUrl = "/todo/done/" + entryId;
         $.ajax({ 
             url: doneTodoUrl,
@@ -79,9 +78,11 @@ define(["jquery"], function($) {
     function deleteTodoEntry(clickedSpan) {
         var entryId = clickedSpan.closest("tr").attr("entryId");
 
-        var deleteUrl = "/todo/" + entryId;
+        addCsrfToken();
+
+        var deleteUrl = "/todo/delete/" + entryId;
         $.ajax({ 
-            url: deleteUrl.url,
+            url: deleteUrl,
             type: "DELETE",
             success: function() { clickedSpan.closest("tr").remove(); }
         });
