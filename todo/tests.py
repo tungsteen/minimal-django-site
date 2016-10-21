@@ -3,8 +3,9 @@ from django.test import Client
 
 from .models import Todo
 
+
 class TodoModelTests(TestCase):
-    
+
     def setUp(self):
         Todo.objects.create(text='First Todo', done=False)
         Todo.objects.create(text='Second Todo', done=True)
@@ -43,4 +44,3 @@ class TodoModelTests(TestCase):
         self.assertEqual(response.status_code, 200)
         response = c.get('/')
         self.assertTrue('Buy Milk!' not in response.content)
-

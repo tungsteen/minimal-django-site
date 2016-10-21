@@ -1,12 +1,11 @@
-"use strict";
-
 define(["jquery"], function($) {
+    "use strict";
 
     function csrfSafeMethod(method) {
         // these HTTP methods do not require CSRF protection
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
-        
+
 
     function getCookie(name) {
         var cookieValue = null;
@@ -39,21 +38,21 @@ define(["jquery"], function($) {
 
 
     function addTodoEntry( submitForm ) {
-        var textForm = submitForm.find("#textToSubmit").val(); 
+        var textForm = submitForm.find("#textToSubmit").val();
 
         // Send the data using post
         var addTodoUrl = "todo/";
 
         addCsrfToken();
-               
+
         var posting = $.post( addTodoUrl, {"text": textForm, "done": false});
- 
+
         // Put the results in a div
         posting.done(function( data ) {
-            $("#insert-here").append("<tr class='todo-row' entryId='" + data.id +"'>" + 
-                "<td class='col-md-1'><input autocomplete='off' type='checkbox'></td>" + 
-                "<td class='todo-text'>" + data.text + "</td>" + 
-                "<td class='col-md-1'><span class='glyphicon glyphicon-remove delete-button'></span></td>" + 
+            $("#insert-here").append("<tr class='todo-row' entryId='" + data.id +"'>" +
+                "<td class='col-md-1'><input autocomplete='off' type='checkbox'></td>" +
+                "<td class='todo-text'>" + data.text + "</td>" +
+                "<td class='col-md-1'><span class='glyphicon glyphicon-remove delete-button'></span></td>" +
                 "</tr>");
         });
     }
@@ -62,9 +61,9 @@ define(["jquery"], function($) {
         var entryId = todoRow.attr("entryId");
 
         addCsrfToken();
-        
+
         var doneTodoUrl = "/todo/done/" + entryId;
-        $.ajax({ 
+        $.ajax({
             url: doneTodoUrl,
             type: "PUT"
         }).done(function(data) {
@@ -81,7 +80,7 @@ define(["jquery"], function($) {
         addCsrfToken();
 
         var deleteUrl = "/todo/delete/" + entryId;
-        $.ajax({ 
+        $.ajax({
             url: deleteUrl,
             type: "DELETE",
             success: function() { clickedSpan.closest("tr").remove(); }
@@ -92,5 +91,5 @@ define(["jquery"], function($) {
         addTodoEntry: addTodoEntry,
         doneTodoEntry: doneTodoEntry,
         deleteTodoEntry: deleteTodoEntry
-    }
+    };
 });
